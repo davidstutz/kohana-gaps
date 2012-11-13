@@ -4,10 +4,11 @@ There are mainly two kinds of filters. The first one are only available for rela
 
 Note that for relationship drivers **only** the first kind of filters is available.
 
-Defining filters for non relationship drivers:
+Defining filters for non relationship drivers works similar to defining filters for orm models:
 
 	'filters' => array(
-		array('Model_Entry', 'filter'),
-	),
-	
-The 'filters' key expects arrays used for call_user_func(). As parameter the current value of the driver is passed.
+    	// Will format the date according to the second parameter:
+        'date' => array(
+            array('date', array(':value', 'Y-m-d')),
+        ),
+    )

@@ -44,10 +44,10 @@ abstract class Kohana_Gaps_Driver
 	 * @param	array 	options
 	 * @param	object	model
 	 */
-	public function __construct($field, $value, $options, $model)
+	public function __construct($field, $options, $model)
 	{
+		$this->_value = $model->{$field};
 		$this->_field = $field;
-		$this->_value = $value;
 		$this->_options = $options;
 	}
 	
@@ -81,14 +81,55 @@ abstract class Kohana_Gaps_Driver
 		
 		if (!isset($this->_rel))
 		{
-			if (isset($this->_options['filters']))
+			if (isset($this->_options['filters']) AND is_array($this->_options['filters']))
 			{
-				foreach ($this->_options['filters'] as $method)
+				foreach ($this->_options['filters'] as $array)
 				{
-					$value = call_user_func($method, $value);
+					// Value needs to be bound inside the loop so we are always using the
+					// version that was modified by the filters that already ran
+					$_bound[':value'] = $value;
+		
+					// Filters are defined as array($filter, $params)
+					$filter = $array[0];
+					$params = Arr::get($array, 1, array(':value'));
+		
+					foreach ($params as $key => $param)
+					{
+						if (is_string($param) AND array_key_exists($param, $_bound))
+						{
+							// Replace with bound value
+							$params[$key] = $_bound[$param];
+						}
+					}
+		
+					if (is_array($filter) OR ! is_string($filter))
+					{
+						// This is either a callback as an array or a lambda
+						$value = call_user_func_array($filter, $params);
+					}
+					elseif (strpos($filter, '::') === FALSE)
+					{
+						// Use a function call
+						$function = new ReflectionFunction($filter);
+		
+						// Call $function($this[$field], $param, ...) with Reflection
+						$value = $function->invokeArgs($params);
+					}
+					else
+					{
+						// Split the class and method of the rule
+						list($class, $method) = explode('::', $filter, 2);
+		
+						// Use a static method call
+						$method = new ReflectionMethod($class, $method);
+		
+						// Call $Class::$method($this[$field], $param, ...) with Reflection
+						$value = $method->invokeArgs(NULL, $params);
+					}
 				}
 			}
 		}
+		
 		return $value;
 	}
 	
@@ -158,8 +199,13 @@ abstract class Kohana_Gaps_Driver
 	 * 
 	 * @param	object	validation
 	 */
-	public function validation($validation)
+	public function validation($validation, $post)
 	{
+		if (isset($post[$this->_field]))
+		{
+			$this->_value = $post[$this->_field];
+		}
+		
 		if (isset($this->_options['rules']))
 		{
 			foreach ($this->_options['rules'] as $rule => $array)
@@ -170,13 +216,28 @@ abstract class Kohana_Gaps_Driver
 	}
 	
 	/**
-	 * Get error for this driver.
+	 * Get or set error for this driver.
 	 * 
+	 * @param	mixed	error/s
 	 * @return	string	error
 	 */
-	public function error()
+	public function error($mixed = NULL)
 	{
-		return $this->_error;
+		if ($mixed !== NULL)
+		{
+			if (is_array($mixed))
+			{
+				$this->_error = array_key_exists($this->_field, $mixed) ? $mixed[$this->_field] : FALSE;
+			}
+			else if (is_string($mixed))
+			{
+				$this->_error = $mixed;
+			}
+		}
+		else
+		{
+			return $this->_error;
+		}
 	}
 	
 	/**

@@ -34,9 +34,9 @@ class Kohana_Gaps_Driver_Belongs_To extends Kohana_Gaps_Driver
 	 * @param	mixed	value
 	 * @param	array 	options
 	 */
-	public function __construct($field, $value, $options, $model)
+	public function __construct($field, $options, $model)
 	{
-		parent::__construct($field, $value, $options, $model);
+		parent::__construct($field, $options, $model);
 		
 		if (!isset($options['orm']))
 		{
@@ -49,7 +49,6 @@ class Kohana_Gaps_Driver_Belongs_To extends Kohana_Gaps_Driver
 		}
 		
 		$this->_model = $model;
-		
 		/* Get relationship model. */
 		$belongs_to = $model->belongs_to();
 		$this->_rel = $this->_field;

@@ -139,17 +139,7 @@ class Kohana_Gaps_Form {
 				throw new Kohana_Exception('Gaps: Driver '.$driver.' not found.');
 			}
 			
-			/* Get current value. */
-			if (FALSE !== array_key_exists($field, $this->_has_many))
-			{
-				$value = $this->_model->{$field}->find_all();
-			}
-			else
-			{
-				$value = $this->_model->{$field};
-			}
-			
-			$this->_drivers[$field] = new $driver($field, $value, $array, $this->_model);
+			$this->_drivers[$field] = new $driver($field, $array, $this->_model);
 			
 			if (isset($array['group']))
 			{
@@ -194,7 +184,7 @@ class Kohana_Gaps_Form {
 		
 		foreach ($this->_drivers as $driver)
 		{
-			$driver->validation($driver instanceof Kohana_Gaps_Driver_File ? $file_validation : $validation);
+			$driver->validation($driver instanceof Kohana_Gaps_Driver_File ? $file_validation : $validation, $post);
 		}
 		
 		/**
@@ -217,7 +207,7 @@ class Kohana_Gaps_Form {
 			$this->_errors = array_merge($file_validation->errors(str_replace('_', '/', $this->_model->object_name())), $validation->errors(str_replace('_', '/', $this->_model->object_name())));
 			foreach ($this->_drivers as $driver)
 			{
-				$driver->errors($this->_errors);
+				$driver->error($this->_errors);
 			}
 			
 			return FALSE;

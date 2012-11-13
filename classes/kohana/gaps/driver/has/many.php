@@ -44,9 +44,9 @@ class Kohana_Gaps_Driver_Has_Many extends Kohana_Gaps_Driver
 	 * @param	mixed	value
 	 * @param	array 	options
 	 */
-	public function __construct($field, $value, $options, $model)
+	public function __construct($field, $options, $model)
 	{
-		parent::__construct($field, $value, $options, $model);
+		parent::__construct($field, $options, $model);
 		
 		if (!isset($options['orm']))
 		{

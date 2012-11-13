@@ -11,7 +11,7 @@
 		<?php $models = $input->models(); ?>
 		<?php foreach ($models as $model): ?>
 			<span class="<?php echo Gaps::prefix('checkbox'); ?>">
-				<input name="<?php echo $input->field(); ?>[]" type="checkbox" value="<?php echo $model->id; ?>" <?php if ($input->model()->has($input->field(), $model->id)) echo 'checked="checked"'; ?> <?php echo HTML::attributes($input->attributes()); ?> />
+				<input name="<?php echo $input->field(); ?>[]" type="checkbox" value="<?php echo $model->id; ?>" <?php if ($input->model()->has($input->field(), $model->id) OR (($array = $input->value()) AND is_array($array) AND array_search($model->id, $array) !== FALSE)) echo 'checked="checked"'; ?> <?php echo HTML::attributes($input->attributes()); ?> /> <?php echo strtr($input->orm(), $model->as_array()); ?>
 				<label>
 					<?php echo strtr($input->orm(), $model->as_array()); ?>
 				</label>
