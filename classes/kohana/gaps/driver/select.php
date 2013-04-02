@@ -27,7 +27,7 @@ class Kohana_Gaps_Driver_Select extends Kohana_Gaps_Driver
 	{
 		parent::__construct($field, $options, $model);
 		
-		if ( !isset($options['options']) )
+		if (!isset($options['options']))
 		{
 			throw new Kohana_Exception('Gaps: Driver Kohana_Gaps_Driver_Select requires the \'options\' key to be set.');
 		}
@@ -41,7 +41,8 @@ class Kohana_Gaps_Driver_Select extends Kohana_Gaps_Driver
 	 */
 	public function load($model, $post)
 	{
-		$model->{$this->_field} = $post[$this->_field];
+		$this->_value = $post[$this->field];
+		$model->{$this->field} = $post[$this->field];
 	}
 	
 	/**

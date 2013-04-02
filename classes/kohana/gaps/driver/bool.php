@@ -62,13 +62,15 @@ class Kohana_Gaps_Driver_Bool extends Kohana_Gaps_Driver
 	 */
 	public function load($model, $post)
 	{
-		if (isset($post[$this->_field]))
+		if (isset($post[$this->field]))
 		{
-			$model->{$this->_field} = $this->_options['options']['checked'];
+			$model->{$this->field} = $this->_options['options']['checked'];
+			$this->_value = $this->_options['options']['checked'];
 		}
 		else
 		{
-			$model->{$this->_field} = $this->_options['options']['unchecked'];
+			$model->{$this->field} = $this->_options['options']['unchecked'];
+			$this->_value = $this->_options['options']['unchecked'];
 		}
 	}
 }

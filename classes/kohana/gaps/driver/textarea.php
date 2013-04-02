@@ -24,6 +24,7 @@ class Kohana_Gaps_Driver_Textarea extends Kohana_Gaps_Driver
 	 */
 	public function load($model, $post)
 	{
-		$model->{$this->_field} = $post[$this->_field];
+		$this->_value = $post[$this->field];
+		$model->{$this->field} = $post[$this->field];
 	}
 }

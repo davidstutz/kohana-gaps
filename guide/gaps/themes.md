@@ -4,9 +4,10 @@ Gaps supports different themes, describing the generated markup for all drivers.
 
 Currently supported themes:
 
-	* Default
-	* Bootstrap
-	
+* Default
+* Bootstrap
+* Bootstrap inline
+
 ## Theme Deveopment
 
 For further theme development both provided themes can be used as example.

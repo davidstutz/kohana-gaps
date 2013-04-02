@@ -39,10 +39,8 @@ First step: Set up the model and the gaps configuration method.
 				'gender' => array( // Render the field 'gender'.
 					'label' => 'Gender', // The label will be automatically translated.
 					'rules' => array( // Define the rules for validation.
-						// Formatis the following:
-						// 'rule' => array with parmaters (mostly only ':value')
-						// Important: the rule name must be the key of the rules array.
-						'not_empty' => array(':value'),
+						// Format is the same as adding rules to the orm model itself.
+						array('not_empty'),
 					),
 					'driver' => 'select', // Used driver for formular, will render this field as select.
 					'options' => array( // Define the options of the select. The optios must be given is the select driver is used.
@@ -60,7 +58,7 @@ First step: Set up the model and the gaps configuration method.
 					'label' => 'Last name',
 					// 'text' driver...
 					'rules' => array(
-						'not_empty' => array(':value'),
+						array('not_empty'),
 					),
 				),
 				'email' => array( // ...
@@ -85,6 +83,8 @@ Second step: The controller action.
 	// The method expects the contact model and the name of the configuration file.
 	$form = Gaps::form($contact, 'gaps');
 	echo $form;
+	// Alternatively use a non-default theme:
+	echo $form->render('theme');
 	
 Gaps will use the configuration array to render the given files with correct formular elements. See comments for further explanation. Gaps will only render the fields given in the configuration.
 
@@ -173,4 +173,4 @@ But beneath form creation Gaps will handle validation and in addition save the c
 	
 This simple example shows the basic set up for working with Gaps.
 
-For more advanced examples see [further Examples](further-examples.md).
+For more advanced examples see [further examples](further-examples.md).

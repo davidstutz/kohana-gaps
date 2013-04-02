@@ -49,12 +49,14 @@ class Kohana_Gaps_Driver_Belongs_To extends Kohana_Gaps_Driver
 		}
 		
 		$this->_model = $model;
-		/* Get relationship model. */
+		
 		$belongs_to = $model->belongs_to();
-		$this->_rel = $this->_field;
-		if ( isset($belongs_to[$this->_field]['model']) )
+		
+		$this->_rel = $this->field;
+		
+		if (isset($belongs_to[$this->field]['model']))
 		{
-			$this->_rel = $belongs_to[$this->_field]['model'];
+			$this->_rel = $belongs_to[$this->field]['model'];
 		}
 	}
 
@@ -66,54 +68,8 @@ class Kohana_Gaps_Driver_Belongs_To extends Kohana_Gaps_Driver
 	 */
 	public function load($model, $post)
 	{
-		$model->{$this->_field} = ORM::factory($this->_rel, $post[$this->_field]);
-	}
-	
-	/**
-	 * Getter for relationship model.
-	 * 
-	 * @return	string	relationship model
-	 */
-	public function rel()
-	{
-		return $this->_rel;
-	}
-	
-	/**
-	 * Get elements to insert before orm models.
-	 * 
-	 * @return	array 	before
-	 */
-	public function before()
-	{
-		if (isset($this->_options['before']))
-		{
-			return $this->_options['before'];
-		}
-		else
-		{
-			return array();
-		}
-	}
-	
-	/**
-	 * Getter for ORM vals.
-	 * 
-	 * @return	array 	orm vals
-	 */
-	public function orm()
-	{
-		return $this->_options['orm'];
-	}
-	
-	/**
-	 * Getter for options.
-	 * 
-	 * @return	array 	options
-	 */
-	public function options()
-	{
-		return isset($this->_options['options'])? $this->_options['options']: array();
+		$this->_value = $post[$this->field];
+		$model->{$this->field} = ORM::factory($this->_rel, $post[$this->field]);
 	}
 	
 	/**
@@ -123,12 +79,14 @@ class Kohana_Gaps_Driver_Belongs_To extends Kohana_Gaps_Driver
 	 */
 	public function models()
 	{
-		$orm = Orm::factory($this->_rel);
+		$orm = ORM::factory($this->_rel);
 		
-		$filters = isset($this->_options['filters'])? $this->_options['filters'] : array();
-		foreach ($filters as $filter => $args)
+		if (isset($this->_options['models']) AND is_array($this->_options['models']))
 		{
-			call_user_func_array(array($orm, $filter), $args);
+			foreach ($this->_options['models'] as $filter => $args)
+			{
+				call_user_func_array(array($orm, $filter), $args);
+			}
 		}
 		
 		return $orm->find_all();

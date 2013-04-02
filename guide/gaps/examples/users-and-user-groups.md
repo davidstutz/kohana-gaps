@@ -28,7 +28,6 @@ Consider the following models based on the follwing SQL scheme:
 	  `password` VARCHAR(65) NOT NULL ,
 	  `group_id` INT(11) UNSIGNED NULL ,
 	  PRIMARY KEY (`id`) ,
-	  FULLTEXT (`email`, `first_name`, `last_name`) ,
 	  UNIQUE INDEX `uniq_email` (`email` ASC) ,
 	  INDEX `fk_users_group_id` (`group_id` ASC) ,
 	  CONSTRAINT `fk_users_group_id`
@@ -180,7 +179,7 @@ The controller action for adding a new user:
 			// $user->save();
 			// $form->save_rels(); // Save the group relationship.
 			
-			$this->request->redirect(...);
+			$this->redirect(...);
 		}
 	}
 

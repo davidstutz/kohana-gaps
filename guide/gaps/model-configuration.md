@@ -25,6 +25,7 @@ General, driver independant configuration:
 * rules
 * group
 * attributes
+* filters
 
 For rules all validation rules known from kohana can be used or individual ones can be created. The validation within Gaps is based on the Kohana Validation class.
 
@@ -36,21 +37,33 @@ For rules all validation rules known from kohana can be used or individual ones 
 	public function gaps()
 	{
 		return array(
-			'attribute_name' => array(
-				// Tha label option can be set to FALSE for hiding the label.
+			':field' => array(
+				// The label option can be set to FALSE for hiding the label.
 				'label' => 'This label will automatically be translated',
-				'driver' => 'text', //Use the text driver...
+				'driver' => 'text', // Use the text driver...
 				'rules' => array(
 					// Rules go in here...
-					'rule' => array(':value', ... ), // Key must be the rule name and value is an array with rule paramters (mostyle only :value).
+					array('rules', array(':value')),
 				),
+				'filters' => array(
+					// Filters are assigned similar to orm filters on the model.
+			    	// Will format the date according to the second parameter:
+			        'date' => array(
+			            array('date', array(':value', 'Y-m-d')),
+			        ),
+			    )
 				// These attributes will be applied on the form element (e.g. text input).
 				'attributes' => array(
 					'style' => 'style declarations go here',
 					'class' => 'classes here',
-					'ID' => 'ID here',
+					'id' => 'ID here',
 				),
-			);
+			),
+			':field' => array(
+				// The label can also be empty or set to FALSE:
+				'label' => FALSE,
+				// Omitting the driver option will cause gaps to take the default driver: 'text' for normal attributes, 'belongs_to' for belongs to relationships, etc. ...
+			),
 		);
 	}
 	

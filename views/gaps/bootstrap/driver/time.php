@@ -5,7 +5,10 @@
 		</label>
 	<?php endif; ?>
 	<div class="controls">
-		<input type="text" value="<?php echo $input->value(); ?>" name="<?php echo $input->field; ?>" <?php echo HTML::attributes($input->attributes); ?> />
+		<div class="input-append bootstrap-timepicker">
+			<input type="text" value="<?php echo $input->value(); ?>" name="<?php echo $input->field; ?>" <?php echo HTML::attributes($input->attributes); ?> />
+			<span class="add-on"><i class="icon-time"></i></span>
+		</div>
 		<?php if ($input->error()): ?>
 			<span class="help-inline"><?php echo $input->error(); ?></span>
 		<?php endif; ?>

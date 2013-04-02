@@ -74,9 +74,22 @@ class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver
 				throw new Kohana_Exception('Gaps: Directory ' . $this->_options['store'] . ' must be writable.');
 			}
 			
-			Upload::save($this->_files[$this->_field], $this->_files[$this->_field]['name'], $this->_options['store']);
+			$ext = File::ext($this->_files[$this->field]['name']);
+			$filename = $this->_files[$this->field]['name'];
+			$filename = preg_replace('#.' . $ext . '$#', '', $filename);
 			
-			$this->_model->{$this->_field} = $this->_files[$this->_field]['name'];
+			if (isset($this->_options['filename']) AND $this->_options['filename'] !== FALSE)
+			{
+				$filename = strtr($this->_options['filename'], array_merge(array('filename' => $filename), $this->_model->as_array())) . '.' . $ext;
+			}
+			else
+			{
+				$filename = $filename . '.' . $ext;
+			}
+			
+			Upload::save($this->_files[$this->field], $filename, $this->_options['store']);
+			
+			$this->_model->{$this->field} = $filename;
 			$this->_model->save();
 		}
 		if ($this->_options['call'])

@@ -61,10 +61,11 @@ class Kohana_Gaps_Driver_Has_Many_Select extends Kohana_Gaps_Driver
 		$this->_model = $model;
 		
 		$has_many = $model->has_many();
-		$this->_rel = $this->_field;
-		if (isset($has_many[$this->_field]['model']))
+		
+		$this->_rel = $this->field;
+		if (isset($has_many[$this->field]['model']))
 		{
-			$this->_rel = $has_many[$this->_field]['model'];
+			$this->_rel = $has_many[$this->field]['model'];
 		}
 	}
 	
@@ -76,10 +77,10 @@ class Kohana_Gaps_Driver_Has_Many_Select extends Kohana_Gaps_Driver
 	 */
 	public function load($model, $post)
 	{
-		if (isset($post[$this->_field])
-			AND is_array($post[$this->_field]))
+		if (isset($post[$this->field]))
 		{
-			$this->_rels = $post[$this->_field];
+			$this->_value = $post[$this->field];
+			$this->_rels = $post[$this->field];
 		}
 	}
 	
@@ -91,11 +92,11 @@ class Kohana_Gaps_Driver_Has_Many_Select extends Kohana_Gaps_Driver
 		/**
 		 * Delete relationships not selected in form and add new ones.
 		 */
-		foreach ($this->_model->{$this->_field}->find_all() as $model)
+		foreach ($this->_model->{$this->field}->find_all() as $model)
 		{
 			if (FALSE === array_search($model->id, $this->_rels))
 			{
-				$this->_model->remove($this->_field, $model->id);
+				$this->_model->remove($this->field, $model->id);
 			}
 		}
 		
@@ -104,31 +105,11 @@ class Kohana_Gaps_Driver_Has_Many_Select extends Kohana_Gaps_Driver
 			$rel = ORM::factory($this->_rel, $id);
 			
 			if ($rel->loaded()
-				AND !$this->_model->has($this->_field, $rel->id))
+				AND !$this->_model->has($this->field, $rel->id))
 			{
-				$this->_model->add($this->_field, $rel);
+				$this->_model->add($this->field, $rel);
 			}
 		}
-	}
-	
-	/**
-	 * Getter for relationship model.
-	 * 
-	 * @return	string	model
-	 */
-	public function rel()
-	{
-		return $this->_rel;
-	}
-	
-	/**
-	 * Getter for ORM vals.
-	 * 
-	 * @return	array 	orm vals
-	 */
-	public function orm()
-	{
-		return $this->_options['orm'];
 	}
 	
 	/**
@@ -138,12 +119,14 @@ class Kohana_Gaps_Driver_Has_Many_Select extends Kohana_Gaps_Driver
 	 */
 	public function models()
 	{
-		$orm = Orm::factory($this->_rel);
+		$orm = ORM::factory($this->_rel);
 		
-		$filters = isset($this->_options['filters'])? $this->_options['filters'] : array();
-		foreach ($filters as $filter => $args)
+		if (isset($this->_options['models']) AND is_array($this->_options['models']))
 		{
-			call_user_func_array(array($orm, $filter), $args);
+			foreach ($this->_options['models'] as $filter => $args)
+			{
+				call_user_func_array(array($orm, $filter), $args);
+			}
 		}
 		
 		return $orm->find_all();

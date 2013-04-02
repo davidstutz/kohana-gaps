@@ -1,20 +1,19 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Password driver.
+ * Time driver.
  * 
  * @package		Gaps
  * @author		David Stutz
  * @copyright	(c) 2012 David Stutz
  * @license		http://opensource.org/licenses/bsd-3-clause
  */
-class Kohana_Gaps_Driver_Password extends Kohana_Gaps_Driver
+class Kohana_Gaps_Driver_Time extends Kohana_Gaps_Driver
 {
-	
 	/**
-	 * @var	string	used view
+	 * @var used view
 	 */
-	protected $_view = 'password';
+	protected $_view = 'time';
 
 	/**
 	 * Load to load value.

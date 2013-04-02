@@ -35,9 +35,10 @@ Consider the model as follows:
 				'src' => array(
 					'driver' => 'file',
 					'label' => FALSE,
-					'store' => DOCROOT . 'userfiles' . DIRECTORY_SEPARATOR . 'projects' . DIRECTORY_SEPARATOR . $this->project->id . '/', // Path to store file.
+					'store' => DOCROOT . 'userfiles' . DIRECTORY_SEPARATOR . 'projects' . DIRECTORY_SEPARATOR . $this->project->id . DIRECTORY_SEPARATOR, // Path to store file.
 					'create' => TRUE, // Set permission to create folder if not existing.
 					'call' => FALSE, // No method shall be called on the file.
+					'filename' => 'id-filename', // id will be replaced by the models id, filename will be replaced by the original filename.
 					'rules' => array(
 						'Upload::not_empty' => array(':value'),
 						'Upload::size' => array(':value', '1M'),

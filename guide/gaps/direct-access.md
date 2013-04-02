@@ -60,6 +60,6 @@ Direct access and additional methods allow to format the generated markup of you
 		<!-- Or simply display all drivers at once: -->
 		<?php echo $form->content(); ?>
 	
-		<?php echo $form->swubmit(); ?>
+		<?php echo $form->submit(); ?>
 	<!-- Closing tag for form. -->
 	<?php echo $form->close(); ?>

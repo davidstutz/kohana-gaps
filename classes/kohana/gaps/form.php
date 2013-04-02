@@ -21,21 +21,6 @@ class Kohana_Gaps_Form {
 	protected $_model;
 	
 	/**
-	 * @var	array 	has many relationships of model
-	 */
-	protected $_has_many = array();
-	
-	/**
-	 * @var	array 	has one relationships
-	 */
-	protected $_has_one = array();
-	
-	/**
-	 * @var	array 	belongs to relationships
-	 */
-	protected $_belongs_to = array();
-	
-	/**
 	 * @var	array 	errors
 	 */
 	protected $_errors = array();
@@ -49,6 +34,11 @@ class Kohana_Gaps_Form {
 	 * @var	array 	render groups
 	 */
 	protected $_render = array();
+	
+	/**
+	 * @var	string	validation file
+	 */
+	protected $_validation_file;
 	
 	/**
 	 * Constructor.
@@ -70,10 +60,11 @@ class Kohana_Gaps_Form {
 		/**
 		 * Check for validation file.
 		 */
-		$file = Kohana::find_file('messages', str_replace('_', '/', $model->object_name()));
-		if (empty($file))
+		$this->_validation_file = str_replace('_', DIRECTORY_SEPARATOR, $model->object_name());
+		
+		if (!Kohana::find_file('messages', $this->_validation_file))
 		{
-			throw new Kohana_Exception('Gaps: Validation file \'' . str_replace('_', '/', $model->object_name()) . '\' not found.');
+			throw new Kohana_Exception('Gaps: Validation file \'' . $this->_validation_file . '\' not found.');
 		}
 		
 		/**
@@ -82,14 +73,10 @@ class Kohana_Gaps_Form {
 		$this->_model = $model;
 		$this->_attributes = array('method' => 'POST');
 		
-		$columns = $model->{$method}();
-		
-		/**
-		 * Get and save all relationships.
-		 */
-		$this->_has_many = $this->_model->has_many();
-		$this->_has_one = $this->_model->has_one();
-		$this->_belongs_to = $this->_model->belongs_to();
+		if (!is_array($model->{$method}()))
+		{
+			throw new Kohana_Exception('Gaps: Method \'' . $method . '\' does not return an array.');
+		}
 		
 		/**
 		 * Init all fields.
@@ -101,23 +88,24 @@ class Kohana_Gaps_Form {
 		 * - belongs_to for belongs to relationships
 		 * - has_one for has one relationships
 		 */
-		foreach ($columns as $field => $array)
+		foreach ($model->{$method}() as $field => $array)
 		{
 			/* Has many. */
-			if (FALSE !== array_key_exists($field, $this->_has_many))
+			if (FALSE !== array_key_exists($field, $this->_model->has_many()))
 			{
-					$array['driver'] = 'has_many' . (isset($array['driver']) ? '_' . ucfirst($array['driver']) : '');
+				$array['driver'] = 'has_many' . (isset($array['driver']) ? '_' . $array['driver'] : '');
 			}
 			/* Has one. */
-			elseif (FALSE !== array_key_exists($field, $this->_has_one))
+			elseif (FALSE !== array_key_exists($field, $this->_model->has_one()))
 			{
-					$array['driver'] = 'has_one' . (isset($array['driver']) ? '_' . ucfirst($array['driver']) : '');
+				$array['driver'] = 'has_one' . (isset($array['driver']) ? '_' . $array['driver'] : '');
 			}
 			/* Belongs to. */
-			elseif (FALSE !== array_key_exists($field, $this->_belongs_to))
+			elseif (FALSE !== array_key_exists($field, $this->_model->belongs_to()))
 			{
-					$array['driver'] = 'belongs_to' . (isset($array['driver']) ? $array['driver'] : '');
+				$array['driver'] = 'belongs_to' . (isset($array['driver']) ? $array['driver'] : '');
 			}
+			
 			/* No relationship. */
 			if (!isset($array['driver']))
 			{
@@ -125,13 +113,7 @@ class Kohana_Gaps_Form {
 			}
 			
 			/* Get driver. */
-			$parts = explode('_', $array['driver']);
-			$driver = 'Gaps_Driver';
-			foreach($parts as &$part)
-			{
-				$driver .=  '_'.ucfirst($part);
-			}
-			$driver = 'Kohana_Gaps_Driver_'.ucfirst($array['driver']);
+			$driver = 'Kohana_Gaps_Driver_' . implode('_', array_map('ucfirst', explode('_', $array['driver'])));
 			
 			/* Check for driver. */
 			if (!class_exists($driver))
@@ -173,18 +155,22 @@ class Kohana_Gaps_Form {
 	 * @return	boolean	passed validation
 	 * @uses	Validation
 	 */
-	public function load($post, $files = array())
+	public function load($post)
 	{
 		/**
 		 * Ask all drivers for their validation.
 		 * They will add needed rules to the validation object.
 		 */
 		$validation = Validation::factory($post);
-		$file_validation = Validation::factory($files);
 		
 		foreach ($this->_drivers as $driver)
 		{
-			$driver->validation($driver instanceof Kohana_Gaps_Driver_File ? $file_validation : $validation, $post);
+			if (is_array($driver->rules))
+			{
+				$validation->rules($driver->field, $driver->rules);
+			}
+			
+			$driver->load($this->_model, $post);
 		}
 		
 		/**
@@ -192,19 +178,10 @@ class Kohana_Gaps_Form {
 		 * If validation passes the modell will be loaded, meaning the given values will be assigned to the model.
 		 * Else errors will be saved.
 		 */
-		if ($validation->check()
-			AND $file_validation->check())
+		if (!$validation->check())
 		{
-			foreach ($this->_drivers as $driver)
-			{
-				$driver->load($this->_model, $driver instanceof Kohana_Gaps_Driver_File ? $files : $post);
-			}
+			$this->_errors = array_merge($validation->errors($this->_validation_file));
 			
-			return TRUE;
-		}
-		else
-		{
-			$this->_errors = array_merge($file_validation->errors(str_replace('_', '/', $this->_model->object_name())), $validation->errors(str_replace('_', '/', $this->_model->object_name())));
 			foreach ($this->_drivers as $driver)
 			{
 				$driver->error($this->_errors);
@@ -212,13 +189,15 @@ class Kohana_Gaps_Form {
 			
 			return FALSE;
 		}
+		
+		return TRUE;
 	}
 	
 	/**
 	 * Saves model.
 	 * 
 	 * Usage:
-	 * 	if ($form->load($this->request->post())) //Will load POST and check validation
+	 * 	if ($form->load($this->request->post())) // Will load POST and check validation
 	 * 	{
 	 * 		$form->save();
 	 * 	}
@@ -229,6 +208,8 @@ class Kohana_Gaps_Form {
 	{
 		$this->_model->save();
 		$this->save_rels();
+		
+		return $this;
 	}
 	
 	/**
@@ -237,7 +218,7 @@ class Kohana_Gaps_Form {
 	 * Will also ahndle anny file uploads.
 	 * 
 	 * Usage:
-	 * 	if ($form->load($this->request->post())) //Will load POST and check validation
+	 * 	if ($form->load($this->request->post())) // Will load POST and check validation
 	 * 	{
 	 * 		$model->save(); // Save model given to the form.
 	 * 		$form->save_rels();
@@ -245,7 +226,6 @@ class Kohana_Gaps_Form {
 	 */
 	public function save_rels()
 	{
-		/* Now save relationships. */
 		foreach ($this->_drivers as $driver)
 		{
 			if (method_exists($driver, 'save_rels'))
@@ -254,6 +234,8 @@ class Kohana_Gaps_Form {
 				$driver->save_rels();
 			}
 		}
+		
+		return $this;
 	}
 	
 	/**
@@ -275,7 +257,8 @@ class Kohana_Gaps_Form {
 	 */
 	public function attributes($array)
 	{
-		$this->_attributes = $array;
+		$this->_attributes = array_merge($this->_attributes, $array);
+		
 		return $this;
 	}
 	
@@ -305,9 +288,14 @@ class Kohana_Gaps_Form {
 	 * 
 	 * @return	string opening tag
 	 */
-	public function open()
+	public function open($theme = NULL)
 	{
-		return View::factory('gaps/' . Kohana::$config->load('gaps.theme') . '/open', array('attributes' => $this->_attributes))->render();
+		if ($theme === NULL)
+		{
+			$theme = Kohana::$config->load('gaps.theme');
+		}
+		
+		return View::factory('gaps/' . $theme . '/open', array('attributes' => $this->_attributes))->render();
 	}
 	
 	/**
@@ -315,9 +303,14 @@ class Kohana_Gaps_Form {
 	 * 
 	 * @return	string content
 	 */
-	public function content()
+	public function content($theme = NULL)
 	{
-		return View::factory('gaps/' . Kohana::$config->load('gaps.theme') . '/content', array('render' => $this->_render, 'drivers' => $this->_drivers, 'errors' => $this->_errors))->render();
+		if ($theme === NULL)
+		{
+			$theme = Kohana::$config->load('gaps.theme');
+		}
+		
+		return View::factory('gaps/' . $theme . '/content', array('theme' => Kohana::$config->load('gaps.theme'), 'render' => $this->_render, 'drivers' => $this->_drivers, 'errors' => $this->_errors))->render();
 	}
 	
 	/**
@@ -325,9 +318,14 @@ class Kohana_Gaps_Form {
 	 * 
 	 * @return	string	submit button
 	 */
-	public function submit()
+	public function submit($theme = NULL)
 	{
-		return View::factory('gaps/' . Kohana::$config->load('gaps.theme') . '/submit')->render();
+		if ($theme === NULL)
+		{
+			$theme = Kohana::$config->load('gaps.theme');
+		}
+		
+		return View::factory('gaps/' . $theme . '/submit')->render();
 	}
 	
 	/**
@@ -335,9 +333,14 @@ class Kohana_Gaps_Form {
 	 * 
 	 * @return	string	closing tag
 	 */
-	public function close()
+	public function close($theme = NULL)
 	{
-		return View::factory('gaps/' . Kohana::$config->load('gaps.theme') . '/close')->render();
+		if ($theme === NULL)
+		{
+			$theme = Kohana::$config->load('gaps.theme');
+		}
+		
+		return View::factory('gaps/' . $theme . '/close')->render();
 	}
 	
 	/**
@@ -345,8 +348,13 @@ class Kohana_Gaps_Form {
 	 * 
 	 * @return	string	rendered form
 	 */
-	public function render()
+	public function render($theme = NULL)
 	{
-		return View::factory('gaps/form', array('theme' => Kohana::$config->load('gaps.theme'), 'attributes' => $this->_attributes, 'render' => $this->_render, 'drivers' => $this->_drivers, 'errors' => $this->_errors))->render();
+		if ($theme === NULL)
+		{
+			$theme = Kohana::$config->load('gaps.theme');
+		}
+		
+		return View::factory('gaps/form', array('theme' => $theme, 'attributes' => $this->_attributes, 'render' => $this->_render, 'drivers' => $this->_drivers, 'errors' => $this->_errors))->render();
 	}
 }

@@ -4,7 +4,6 @@
  - [Model configuration](model-configuration)
  - [Themes](themes)
  - [Direct access](direct-access)
- - [Filters](filters)
  - [Further Examples](further-examples)
  	- [Users and user groups (Belongs To)](examples/users-and-user-groups)
  	- [File Upload](examples/file-upload)
