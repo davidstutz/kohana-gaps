@@ -1,0 +1,7 @@
+<phpunit colors="true" bootstrap="../../../test.php">
+    <testsuites>
+        <testsuite name="kohana-gaps-tests">
+            <directory>./gaps/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

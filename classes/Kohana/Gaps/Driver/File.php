@@ -5,7 +5,7 @@
  * 
  * @package		Gaps
  * @author		David Stutz
- * @copyright	(c) 2012 David Stutz
+ * @copyright	(c) 2013 David Stutz
  * @license		http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver
@@ -41,7 +41,7 @@ class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver
 	/**
 	 * The main action: saving or processing the files is done in save_rels.
 	 * 
-	 * @throws	Kohana_Exception
+	 * @throws	Gaps_Exception
 	 */
 	public function save_rels()
 	{
@@ -57,7 +57,7 @@ class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver
 			{
 				if (!$this->_options['create'])
 				{
-					throw new Kohana_Exception('Gaps: Directory ' . $this->_options['store'] . ' does not exist.');
+					throw new Gaps_Exception('Gaps: Directory ' . $this->_options['store'] . ' does not exist.');
 				}
 				else
 				{
@@ -70,7 +70,7 @@ class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver
 			 */
 			if (!is_writable($this->_options['store']))
 			{
-				throw new Kohana_Exception('Gaps: Directory ' . $this->_options['store'] . ' must be writable.');
+				throw new Gaps_Exception('Gaps: Directory ' . $this->_options['store'] . ' must be writable.');
 			}
 			
 			$ext = File::ext($this->_files[$this->field]['name']);
