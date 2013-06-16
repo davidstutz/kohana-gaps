@@ -129,22 +129,33 @@ class Kohana_Gaps_Form {
     /**
      * Loads array of input, usually POST.
      *
-     * @param	array 	post
-     * @return	boolean	passed validation
+     * @param   array   post
+     * @return  boolean passed validation
      */
-    public function load($post) {
+    public function load($post, $files = NULL) {
         /**
          * Ask all drivers for their validation.
          * They will add needed rules to the validation object.
          */
         $validation = Validation::factory($post);
+        $validation_files = Validation::factory($files);
 
         foreach ($this->_drivers as $driver) {
-            if (is_array($driver->rules)) {
-                $validation->rules($driver->field, $driver->rules);
+            
+            if ($driver instanceof Gaps_Driver_File) {
+                if (is_array($driver->rules)) {
+                    $validation_files->rules($driver->field, $driver->rules);
+                    
+                    $driver->load($this->_model, $files);
+                }
             }
-
-            $driver->load($this->_model, $post);
+            else {
+                if (is_array($driver->rules)) {
+                    $validation->rules($driver->field, $driver->rules);
+                    
+                    $driver->load($this->_model, $post);
+                }
+            }
         }
 
         /**
@@ -152,8 +163,8 @@ class Kohana_Gaps_Form {
          * If validation passes the modell will be loaded, meaning the given values will be assigned to the model.
          * Else errors will be saved.
          */
-        if (!$validation->check()) {
-            $this->_errors = array_merge($validation->errors($this->_validation_file));
+        if (!$validation->check() OR !$validation_files->check()) {
+            $this->_errors = array_merge($validation_files->errors($this->_validation_file), $validation->errors($this->_validation_file));
 
             foreach ($this->_drivers as $driver) {
                 $driver->error($this->_errors);
