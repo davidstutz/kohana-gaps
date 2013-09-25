@@ -44,6 +44,9 @@ class Gaps_DriverTest extends Unittest_TestCase {
                     'option_key_2' => array(
                         'suboption_key_1' => TRUE,
                     ),
+                    // Gaps will automatically add the label and attributes option if not found.
+                    'label' => '',
+                    'attributes' => array(),
                 ),
                 'string',
             ),
@@ -53,6 +56,9 @@ class Gaps_DriverTest extends Unittest_TestCase {
                     'option_key_2' => array(
                         'suboption_key_1' => TRUE,
                     ),
+                    // Gaps will automatically add the label and attributes option if not found.
+                    'label' => '',
+                    'attributes' => array(),
                 ),
                 FALSE,
             ),
@@ -62,6 +68,9 @@ class Gaps_DriverTest extends Unittest_TestCase {
                     'option_key_2' => array(
                         'suboption_key_1' => TRUE,
                     ),
+                    // Gaps will automatically add the label and attributes option if not found.
+                    'label' => '',
+                    'attributes' => array(),
                 ),
                 NULL,
             ),

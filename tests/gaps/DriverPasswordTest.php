@@ -101,4 +101,31 @@ class Gaps_DriverPasswordTest extends Unittest_TestCase {
     
         $driver->load($this->_model, $post);
     }
+    
+    /**
+     * Provides test data for testing rendering.
+     *
+     * @return array
+     */
+    public function provider_render() {
+        return array(
+            array(
+                array(
+                    
+                ),
+            ),
+        );
+    }
+
+    /**
+     * Tests cosntructor.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   array   options
+     */
+    public function test_render($options) {
+        $driver = new Gaps_Driver_Password('field', $options, $this->_model);
+        $driver->render();
+    }
 }

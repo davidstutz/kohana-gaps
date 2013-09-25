@@ -31,6 +31,17 @@ class TestModel {
     protected $_object_name = 'test_model';
     
     /**
+     * Constructor for directly setting data.
+     * 
+     * @param   array   data
+     */
+    public function __construct(array $array = NULL) {
+        if (NULL !== $array) {
+            $this->_cata = $array;
+        }
+    }
+    
+    /**
      * Set data.
      * 
      * @param   string  key
@@ -129,5 +140,25 @@ class TestModel {
             
             ),
         );
+    }
+    
+    /**
+     * Get the data as array.
+     * 
+     * @return  array   data
+     */
+    public function as_array() {
+        return $this->_data;
+    }
+    
+    /**
+     * Check whether the model has a certain relationship.
+     * 
+     * @param   string  model
+     * @param   object  relationship
+     * @return  boolean has
+     */
+    public function has($string, $model) {
+        return TRUE;
     }
 }

@@ -2,9 +2,9 @@
 
 Gaps combines the following steps in one module:
 
-* Form creation based on ORM models.
+* Form creation based on a given ORM model.
 * Form validation.
-* Updating/creation of the model.
+* Updating/creating the model.
 
 For documentation see the guide/ subfolder or use Kohana's userguide module.
 

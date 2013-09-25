@@ -1,16 +1,16 @@
 # Drivers
 
-The following drivers are supported allowing full-featured HTML formulars.
+The following drivers are currently provided:
 
-* textarea
-* text
-* select
-* password
-* password_confirm
-* file
-* bool
-* has_many
-* has_many_select
-* belongs_to
+* `text` as default driver for non-relationship attributes.
+* `textarea` for textareas.
+* [`select`]/drivers/select) for selects.
+* `password` for password inputs.
+* [`file`](drivers/file) for file upload.
+* [`bool`](drivers/bool) for checkboxes.
+* [`password_confirm`](drivers/password-confirm) for password creation including a password input to confirm the entered password.
+* [`belongs_to`](drivers/belongs-to) as default driver for `belongs_to` relationships.
+* [`has_many`](drivers/has-many) as default driver for `has_many` relationships using checkboxes.
+* `has_many_select` uses a select for `has_many` relationships.
 
-Each driver requires its own individual configuration.
+For some of the drivers additional configuration is needed in addition to the [driver independant configuration](model-configuration.md) options.

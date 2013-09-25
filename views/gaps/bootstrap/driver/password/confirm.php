@@ -9,6 +9,7 @@
 		<?php endif; ?>
 	</div>
 </div>
+
 <div class="control-group <?php if ($input->error()) echo 'error'; ?>">
 	<label class="control-label" for="<?php echo $input->field; ?>_confirm">
 		<?php echo __('Confirm'); ?>

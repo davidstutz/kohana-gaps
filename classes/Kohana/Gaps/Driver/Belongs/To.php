@@ -3,17 +3,12 @@
 /**
  * Belongs to driver.
  *
- * @package		Gaps
- * @author		David Stutz
+ * @package     Gaps
+ * @author      David Stutz
  * @copyright	(c) 2013 David Stutz
- * @license		http://opensource.org/licenses/bsd-3-clause
+ * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Belongs_To extends Gaps_Driver {
-
-    /**
-     * @var	string	used view
-     */
-    protected $_view = 'belongs/to';
 
     /**
      * @var	string	relationship model
@@ -25,6 +20,11 @@ class Kohana_Gaps_Driver_Belongs_To extends Gaps_Driver {
      */
     protected $_model;
 
+    /**
+     * @var string  view
+     */
+    protected $_view = 'belongs/to';
+    
     /**
      * Constructor.
      *
@@ -39,20 +39,30 @@ class Kohana_Gaps_Driver_Belongs_To extends Gaps_Driver {
         if (!isset($options['orm'])) {
             throw new Gaps_Exception('Driver Gaps_Driver_Belongs_To requires the \'orm\' key to be set.');
         }
-
+        
+        if (empty($options['orm'])) {
+            throw new Gaps_Exception('Driver Gaps_Driver_Belongs_To: the \'orm\' key mus tnot be empty.');
+        }
+        
         if (!is_string($options['orm'])) {
             throw new Gaps_Exception('Driver Gaps_Driver_Belongs_To requires the \'orm\' key to be string.');
         }
-
-        $this->_model = $model;
-
+        
+        // Get the relationhip name.
         $belongs_to = $model->belongs_to();
-
-        $this->_rel = $this->field;
-
+        $rel = $this->field;
         if (isset($belongs_to[$this->field]['model'])) {
-            $this->_rel = $belongs_to[$this->field]['model'];
+            $rel = $belongs_to[$this->field]['model'];
         }
+        
+        // To retrieve the models available as relationships the optioon 'models' is a callable returning all models.
+        if (!isset($this->_options['models'])) {
+            $this->_options['models'] = function() use ($rel) {
+                return ORM::factory($rel)->find_all();
+            };
+        }
+        
+        $this->_rel = $rel;
     }
 
     /**
@@ -62,34 +72,12 @@ class Kohana_Gaps_Driver_Belongs_To extends Gaps_Driver {
      * @param	array 	post
      */
     public function load($model, $post) {
-        $this->_value = $post[$this->field];
-        $model->{$this->field} = ORM::factory($this->_rel, $post[$this->field]);
-    }
-
-    /**
-     * Gets relationship models.
-     *
-     * @return	array 	models
-     */
-    public function models() {
-        $orm = ORM::factory($this->_rel);
-
-        if (isset($this->_options['models']) AND is_array($this->_options['models'])) {
-            foreach ($this->_options['models'] as $filter => $args) {
-                call_user_func_array(array($orm, $filter), $args);
-            }
+        
+        // Relationship models may not exist, so they must not be selected.
+        if (isset($post[$this->field])) {
+            $this->_value = $post[$this->field];
+            $model->{$this->field} = ORM::factory($this->_rel, $post[$this->field]);
         }
-
-        return $orm->find_all();
-    }
-
-    /**
-     * Getter for model
-     *
-     * @return	object	model
-     */
-    public function model() {
-        return $this->_model;
     }
 
 }

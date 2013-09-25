@@ -1,23 +1,23 @@
 # Drivers
 
-# Belongs To
+## Belongs To
 
-Configuration:
+**Note**: For saving the relationships use `$form->save_rels()` after updating/creating the model.
 
-	':field' => array(
-		'models' => array(
-			// Example for filters:
-			// Select all relationships where 'count' is greater than 100.
-			'where' => array('count', '>', 100),
-		),
-		'orm' => 'name', // This key defines which attributes of the has many relationship should be shown as label of the checkboxes.
-		'before' => array(
-			__('Select something'),
-		),
-	),
+Additional configuration options:
 
-The relationship models can be filtered using the 'models' key.
+    // This function will return the models the user can choose of.
+	'models' => function() {
+        return ORM::factory('relationship_model')->find_all();
+    }
+	'orm' => 'name', // This key defines which attributes of the has many relationship should be shown as label of the checkboxes.
 
-'orm' defines a string in which all attribute keys are replaced by the attribute's value of the relationship model.
+The relationship models can be filtered using the `models` option. The `orm` option defines the attributes of the relationship model to be displayed. Example:
 
-'before' can be added optional. It must be an array of additional value => label pairs for additional options shown before all other options in the select input.
+    'orm' => 'last_name, first_name'
+    
+    //...
+    $model->first_name = 'David';
+    $model->last_name = 'Stutz';
+
+The model will be displayed as `Stutz, David`.

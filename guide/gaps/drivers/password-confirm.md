@@ -2,20 +2,11 @@
 
 ## Password confirm
 
-The password confirm generates two password inputs. The driver **will not** validate that the two passwords match.
+There are no additional configuration options, but note: password confirm generates two password inputs, but the driver **will not** validate that the two passwords match, the corresponding rules have to be added manually:
 
-Configuration:
-
-	':field' => array(
-		'label' => 'Password',
-		'driver' => 'password_confirm',
-		// Optional rules:
-		'rules' => array(
-			'min_length' => array(':value', 8),
-			'max_length' => array(':value', 32),
-			'not_empty' => array(':value'),
-			'matches' => array(':validation', 'password', 'password_confirm'),
-		),
+	'rules' => array(
+		array('min_length', array(':value', 8)),
+		array('max_length', array(':value', 32)),
+		array('not_empty', array(':value')),
+		array('matches', array(':validation', 'password', 'password_confirm')),
 	),
-	
-The above configuration shows a advanced configuration for password fields. The rules should be known from Kohana Validation class.

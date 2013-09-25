@@ -8,5 +8,4 @@
  * @copyright   (c) 2013 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
-class Kohana_Gaps_Exception extends Kohana_Exception {
-}
+class Kohana_Gaps_Exception extends Kohana_Exception {}

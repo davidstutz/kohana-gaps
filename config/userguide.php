@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 
 /**
- * Userguide configuration for media module.
+ * Userguide configuration for gaps module.
  * 
  * @package		Gaps
  * @author		David Stutz

@@ -10,20 +10,6 @@
 */
 return array(
 		/**
-		 * Prefix for CSS classes used e.g. for "input", "field" etc.
-		 * Note: Not supported for all themes.
-		 */
-		'prefix' => 'planer-gaps-',
-		
-		/**
-		 * Class used for error div.
-		 */
-		'error' => '<div>
-						<p>' . __('See error(s) below') . '</p>
-						<p>:errors</p>
-					</div>',
-					
-		/**
 		 * Theme used for views.
 		 */
 		'theme' => 'default',

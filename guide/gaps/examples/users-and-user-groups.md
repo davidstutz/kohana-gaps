@@ -2,13 +2,8 @@
 
 ## Users and User Groups (Belongs To)
 
-This example will demonstrate belongs to relationships in combination will normal text drivers and password comfirm drivers.
+This example will demonstrate `belongs_to` relationships. Consider the following SQL tables:
 
-Consider the following models based on the follwing SQL scheme:
-
-	-- -----------------------------------------------------
-	-- Table `user_groups`
-	-- -----------------------------------------------------
 	CREATE  TABLE `user_groups` (
 	  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
 	  `name` VARCHAR(32) NULL ,
@@ -16,10 +11,6 @@ Consider the following models based on the follwing SQL scheme:
 	  PRIMARY KEY (`id`) ,
 	  UNIQUE INDEX `uniq_name` (`name` ASC) );
 	
-	
-	-- -----------------------------------------------------
-	-- Table `users`
-	-- -----------------------------------------------------
 	CREATE  TABLE `users` (
 	  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
 	  `email` VARCHAR(255) NOT NULL ,
@@ -36,14 +27,13 @@ Consider the following models based on the follwing SQL scheme:
 	    ON DELETE NO ACTION
 	    ON UPDATE NO ACTION)
 	DEFAULT CHARACTER SET = utf8;
-	
-See the models:
+
+And the corresponding models:
 
 	/**
 	 * User model.
 	 */
-	class Model_User extends ORM
-	{
+	class Model_User extends ORM {
 	
 		/**
 		 * @var array 	belongs to group
@@ -60,80 +50,45 @@ See the models:
 		 * 
 		 * @return	array 	configuration
 		 */
-		public function gaps_new()
-		{
+		public function gaps_new() {
 			return array(
-				// The first name can not be empty and belongs to the formular group 'name'.
-				// Drivers with the same group will be rendered in an additional span and so 
-				// they can be styled seperately or displayed in one line.
-				'first_name' => array(
-					'label' => 'First name',
-					'rules' => array(
-						'not_empty' => array(':value'),
-					),
-					'group' => 'name',
-				),
-				// The last name can not be empty and belongs to the formular group 'name'.
-				'last_name' => array(
-					'label' => 'Last name',
-					'rules' => array(
-						'not_empty' => array(':value'),
-					),
-					'group' => 'name',
-				),
-				// The email must not be empty and has to be a valid email.
+                array(
+                    'first_name' => array(
+                        'label' => 'First name',
+                        'rules' => array(
+                            array('not_empty', array(':value')),
+                        ),
+                    ),
+                    'last_name' => array(
+                        'label' => 'Last name',
+                        'rules' => array(
+                            array('not_empty', array(':value')),
+                        ),
+                    ),
+                ),
 				'email' => array(
 					'label' => 'Email',
 					'rules' => array(
-						'not_empty' => array(':value'),
-						'email' => array(':value'),
-						'Model_User::unique_email' => array(':value'),
+						array('not_empty', array(':value')),
+						array('email', array(':value')),
 					),
 				),
-				// For the password the password_confirm driver is used.
-				// The rules will ensure that both password match and set bounds for the length of the password.
 				'password' => array(
 					'label' => 'Password',
 					'driver' => 'password_confirm',
 					'rules' => array(
-						'min_length' => array(':value', 8),
-						'max_length' => array(':value', 32),
-						'not_empty' => array(':value'),
-						'matches' => array(':validation', 'password', 'password_confirm'),
+						array('min_length', array(':value', 8)),
+						array('max_length', array(':value', 32)),
+						array('not_empty', array(':value')),
+						array('matches', array(':validation', 'password', 'password_confirm')),
 					),
 				),
-				// The group is the user group this user will belong to.
-				// The group must be given (thus can not be empty).
-				// The 'orm' key will define which attribute of the user group will be shown as option in the select.
-				// A string 'name' is given. Within this stirng 'name' is replaced by $group->name.
 				'group' => array(
 					'label' => 'Group',
 					'rules' => array(
-						'not_empty' => array(':value'),
+						array('not_empty', array(':value')),
 					),
-					'orm' => 'name',
-				),
-			);
-		}
-	
-		/**
-		 * Gaps configuraiton for changing password.
-		 * 
-		 * @return	array 	configuration
-		 */
-		public function gaps_password()
-		{
-			return array(
-				// The password configuration is the same as seen above.
-				'password' => array(
-					'label' => 'Password',
-					'driver' => 'password_confirm',
-					'rules' => array(
-						'not_empty' => array(':value'),
-						'min_length' => array(':value', 8),
-						'max_length' => array(':value', 32),
-						'matches' => array(':validation', 'password', 'password_confirm'),
-					),
+					'orm' => 'name', // Show the name of the groups within the select.
 				),
 			);
 		}
@@ -142,8 +97,7 @@ See the models:
 	/**
 	 * User group model.
 	 */
-	class Model_User_Group extends Model_Red_User_Group
-	{
+	class Model_User_Group extends Model_Red_User_Group {
 	
 		/**
 		 * @var	array 	has many users
@@ -155,10 +109,6 @@ See the models:
 			),
 		);
 	}
-	
-The user belongs to a given user group, and thus each group has many users.
-
-We add two gaps configuration methods to the user model: one for adding a new user and one for changing the password of a user.
 
 The controller action for adding a new user:
 
@@ -168,43 +118,18 @@ The controller action for adding a new user:
 	// Creat the form based on the gaps_new() configuration method.
 	$form = Gaps::form($user, 'gaps_new');
 
-	if (Request::POST === $this->request->method())
-	{
+	if (Request::POST === $this->request->method()) {
 		// Load and validate the POST input.
-		if ($form->load($this->request->post()))
-		{
+		if ($form->load($this->request->post())) {
 			// Will save the model and its relationships.
 			$form->save();
 			// Alternative:
 			// $user->save();
-			// $form->save_rels(); // Save the group relationship.
+			// $form->save_rels(); 
 			
 			$this->redirect(...);
 		}
 	}
 
-	// Will automatically show errors if POST request was made but was not valid.
-	echo $form;
-	
-Controller action for changing the password:
-
-	// Create the new user.
-	$user = ORM::factory('user');
-	
-	// Create the form based on the gaps_password() configuration method.
-	$form = Gaps::form($user, 'gaps_password');
-	
-	if (Request::POST  === $this->request->method())
-	{
-		// Load POST and validate.
-		if ($form->load($this->request->post()))
-		{
-			// Save the changed password.
-			$form->save();
-			// Alternative:
-			// $user->save();
-		}
-	}
-	
 	// Will automatically show errors if POST request was made but was not valid.
 	echo $form;

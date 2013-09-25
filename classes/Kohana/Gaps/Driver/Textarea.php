@@ -3,18 +3,18 @@
 /**
  * Textarea driver.
  *
- * @package		Gaps
- * @author		David Stutz
+ * @package     Gaps
+ * @author      David Stutz
  * @copyright	(c) 2013 David Stutz
- * @license		http://opensource.org/licenses/bsd-3-clause
+ * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Textarea extends Gaps_Driver {
 
     /**
-     * @var	string	used view
+     * @var string  view
      */
     protected $_view = 'textarea';
-
+    
     /**
      * Load to load value.
      *

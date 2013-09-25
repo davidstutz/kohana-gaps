@@ -40,34 +40,60 @@ class Gaps_FormTest extends Unittest_TestCase {
         return array(
             array(
                 array(
-                    'belongs_to' => array(
-                        'option_key' => 'option_value',
-                        'orm' => 'value',
+                    array(
+                        'belongs_to' => array(
+                            'option_key' => 'option_value',
+                            'orm' => 'value',
+                            // Give a method to get relaitonship models. Otherwise gaps will try ORM::factory('belongs_to') ...
+                            'models' => function() {
+                                return array();
+                            },
+                        ),
                     ),
-                    'has_many' => array(
-                        'option_key' => 'option_value',
-                        'orm' => 'value',
+                    array(
+                        'has_many' => array(
+                            'option_key' => 'option_value',
+                            'orm' => 'value',
+                            // Give a method to get relaitonship models. Otherwise gaps will try ORM::factory('belongs_to') ...
+                            'models' => function() {
+                                return array();
+                            },
+                        ),
                     ),
-                    'password_confirm' => array(
-                        'option_key' => 'option_value',
+                    array(
+                        'password_confirm' => array(
+                            'option_key' => 'option_value',
+                        ),
                     ),
-                    'bool' => array(
-                        
+                    array(
+                        'bool' => array(
+
+                        ),
                     ),
-                    'file' => array(
-                        'option_key' => 'option_value',
+                    array(
+                        'file' => array(
+                            'option_key' => 'option_value',
+                        ),
                     ),
-                    'password' => array(
-                        'option_key' => 'option_value',
+                    array(
+                        'password' => array(
+                            'option_key' => 'option_value',
+                        ),
                     ),
-                    'select' => array(
-                        'option_key' => 'option_value',
+                    array(
+                        'select' => array(
+                            'option_key' => 'option_value',
+                        ),
                     ),
-                    'text' => array(
-                        'option_key' => 'option_value',
+                    array(
+                        'text' => array(
+                            'option_key' => 'option_value',
+                        ),
                     ),
-                    'textarea' => array(
-                        'option_key' => 'option_value',
+                    array(
+                        'textarea' => array(
+                            'option_key' => 'option_value',
+                        ),
                     ),
                 ),
             ),
@@ -85,15 +111,20 @@ class Gaps_FormTest extends Unittest_TestCase {
         $this->_model->gaps($configuration);
         $form = new TestForm($this->_model, 'gaps');
         
-        foreach ($configuration as $field => $options) {
-            // Test if the driver occurs in the driver list of the form.
-            $this->assertSame(1, sizeof(array_filter($form->_drivers, function($driver) use ($field) {
-                return $driver->field == $field;
-            })));
-            
-            foreach ($options as $key => $value) {
-                $this->assertNotNull($form->_drivers[$field]->{$key});
-                $this->assertSame($value, $form->_drivers[$field]->{$key});
+        foreach ($configuration as $group) {
+            foreach ($group as $field => $options) {
+                
+                $driver = $form->{$field};
+                
+                // Test if the driver occurs in the driver list of the form.
+                $this->assertSame(1, sizeof(array_filter($form->_drivers, function($group) use ($field) {
+                    return isset($group[$field]);
+                })));
+
+                foreach ($options as $key => $value) {
+                    $this->assertNotNull($driver->{$key});
+                    $this->assertSame($value, $driver->{$key});
+                }
             }
         }
     }
@@ -132,5 +163,162 @@ class Gaps_FormTest extends Unittest_TestCase {
     public function test_construct_exception($method, $object_name) {
         $this->_model->object_name($object_name);
         $form = new Gaps_Form($this->_model, $method);
+    }
+    
+    /**
+     * Provides test data for testing rendering different parts of the form.
+     *
+     * @return array
+     */
+    public function provider_render() {
+        return array(
+            array(
+                array(
+                    array(
+                        'bool' => array(
+
+                        ),
+                    ),
+                    array(
+                        'file' => array(
+                            'option_key' => 'option_value',
+                        ),
+                    ),
+                    array(
+                        'password' => array(
+                            'option_key' => 'option_value',
+                        ),
+                    ),
+                    array(
+                        'select' => array(
+                            'option_key' => 'option_value',
+                        ),
+                    ),
+                    array(
+                        'text' => array(
+                            'option_key' => 'option_value',
+                        ),
+                    ),
+                    array(
+                        'textarea' => array(
+                            'option_key' => 'option_value',
+                        ),
+                    ),
+                ),
+            ),
+        );
+    }
+
+    /**
+     * Tests render.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   string  method
+     * @param   string   object_name
+     */
+    public function test_render($configuration) {
+        $this->_model->gaps($configuration);
+        $form = new Gaps_Form($this->_model, 'gaps');
+        $form->render();
+    }
+    
+    /**
+     * Tests open.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   string  method
+     * @param   string   object_name
+     */
+    public function test_open($configuration) {
+        $this->_model->gaps($configuration);
+        $form = new Gaps_Form($this->_model, 'gaps');
+        $form->open();
+    }
+    
+    /**
+     * Tests open.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   string  method
+     * @param   string   object_name
+     */
+    public function test_close($configuration) {
+        $this->_model->gaps($configuration);
+        $form = new Gaps_Form($this->_model, 'gaps');
+        $form->close();
+    }
+    
+    /**
+     * Tests open.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   string  method
+     * @param   string   object_name
+     */
+    public function test_content($configuration) {
+        $this->_model->gaps($configuration);
+        $form = new Gaps_Form($this->_model, 'gaps');
+        $form->content();
+    }
+    
+    /**
+     * Tests open.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   string  method
+     * @param   string   object_name
+     */
+    public function test_submit($configuration) {
+        $this->_model->gaps($configuration);
+        $form = new Gaps_Form($this->_model, 'gaps');
+        $form->submit();
+    }
+    
+    /**
+     * Provides test data for testing attributes getter/setter.
+     *
+     * @return array
+     */
+    public function provider_attributes() {
+        return array(
+            array(
+                // Testing setter.
+                array(
+                    'class' => 'form',
+                )
+            ),
+            array(
+                // Testing getter.
+                NULL,
+            ),
+        );
+    }
+
+    /**
+     * Tests constructor.
+     * 
+     * @test
+     * @dataProvider provider_attributes
+     * @param   string  method
+     * @param   string   object_name
+     */
+    public function test_attributes($attributes) {
+        $form = new Gaps_Form($this->_model, 'gaps');
+        
+        // Test getter.
+        if (NULL === $attributes) {
+            $this->assertSame($form->attributes($attributes), array('method' => 'POST'));
+        }
+        // Test setter.
+        elseif (is_array($attributes)) {
+            $form->attributes($attributes);
+            $this->assertSame($form->attributes(), array_merge(array('method' => 'POST'), $attributes));
+        }
+        
     }
 }

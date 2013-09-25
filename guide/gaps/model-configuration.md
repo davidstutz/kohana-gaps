@@ -1,70 +1,44 @@
 # Model configuration
 
-Gaps needs to know which model attributes to render in the formular and which driver to use for each attribute. In addition a lot of options can be specified like label, rules for validation and much more.
-
-For gaps configuration a method returning the configuration array is needed within the model:
+The configuration is provided by a method of the model:
 
 	/**
-	 * Gaps configuration
+	 * Gaps configuration.
 	 *
 	 * @return 	array	configuration
 	 */
-	public function gaps()
-	{
+	public function gaps() {
 		return array(
-			// Configuration of attributes go here...
+			// Configuration ...
 		);
 	}
 
-The default name for this method should be 'gaps'. But they can be named different dependant on their purpose.
+The default name for this method should be `gaps`. But they can be named different depending on their purpose.
 
-General, driver independant configuration:
+General, driver independant configuration options:
 
-* label
-* driver
-* rules
-* group
-* attributes
-* filters
+* `label`: The label of the form element. The label is translated automatically.
+* `driver`: The driver used for the attribute.
+* `rules`: Rules for validation.
+* `attributes`: Attributed applied on the form element.
+* `filters`: Filters are applied on the given value of the model before displaying it in the form element.
 
-For rules all validation rules known from kohana can be used or individual ones can be created. The validation within Gaps is based on the Kohana Validation class.
+Rules are configured as known from ORM rules. All available rules from the `Valid` class can be used or custom rules can be implemented.
 
-	/**
-	 * Gaps configuration
-	 *
-	 * @return 	array	configuration
-	 */
-	public function gaps()
-	{
-		return array(
-			':field' => array(
-				// The label option can be set to FALSE for hiding the label.
-				'label' => 'This label will automatically be translated',
-				'driver' => 'text', // Use the text driver...
-				'rules' => array(
-					// Rules go in here...
-					array('rules', array(':value')),
-				),
-				'filters' => array(
-					// Filters are assigned similar to orm filters on the model.
-			    	// Will format the date according to the second parameter:
-			        'date' => array(
-			            array('date', array(':value', 'Y-m-d')),
-			        ),
-			    )
-				// These attributes will be applied on the form element (e.g. text input).
-				'attributes' => array(
-					'style' => 'style declarations go here',
-					'class' => 'classes here',
-					'id' => 'ID here',
-				),
-			),
-			':field' => array(
-				// The label can also be empty or set to FALSE:
-				'label' => FALSE,
-				// Omitting the driver option will cause gaps to take the default driver: 'text' for normal attributes, 'belongs_to' for belongs to relationships, etc. ...
-			),
-		);
-	}
-	
-Beneath the general configuration keys each driver provides additional configuration options. See the driver documentation for more information.
+    array(
+        'field_name' => array(
+            'label' => 'This label will automatically be translated',
+            'driver' => 'text',
+            'rules' => array(
+                array('rules', array(':value')),
+            ),
+            'filters' => array(
+                array('date', array('Y-m-d', ':value')),
+            )
+            'attributes' => array(
+                // HTML attributes here ...
+            ),
+        ),
+    ),
+
+Beneath the general configuration options each driver provides additional configuration options. See the driver documentation for more information.

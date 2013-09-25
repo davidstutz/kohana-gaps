@@ -5,10 +5,11 @@
 		</label>
 	<?php endif; ?>
 	<div class="controls">
-		<?php $models = $input->models(); ?>
-		<select multiple="multiple" name="<?php echo $input->field; ?>[]" class="<?php echo Gaps::prefix('select'); ?> <?php echo $input->attributes; ?>">
-			<?php foreach ($models as $model): ?>
-				<option value="<?php echo $model->id; ?>" <?php if ($input->model()->has($input->field, $model->id)) echo 'selected'; ?>><?php echo strtr($input->orm, $model->as_array()); ?></option>
+		<select multiple="multiple" name="<?php echo $input->field; ?>[]" <?php echo HTML::attributes($input->attributes); ?>>
+			<?php foreach ($input->models() as $model): ?>
+				<option value="<?php echo $model->id; ?>" <?php if ($input->model()->has($input->field, $model->id)): ?>selected<?php endif; ?>>
+				    <?php echo strtr($input->orm, $model->as_array()); ?>
+				</option>
 			<?php endforeach; ?>
 		</select>
 		<?php if ($input->error()): ?>

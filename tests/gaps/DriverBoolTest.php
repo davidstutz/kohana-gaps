@@ -32,7 +32,7 @@ class Gaps_DriverBoolTest extends Unittest_TestCase {
      *
      * @return array
      */
-    public function provider_cosntruct() {
+    public function provider_construct() {
         return array(
             array(
                 array(), // No options.
@@ -67,7 +67,7 @@ class Gaps_DriverBoolTest extends Unittest_TestCase {
      * Tests cosntructor.
      * 
      * @test
-     * @dataProvider provider_cosntruct
+     * @dataProvider provider_construct
      * @expectedException Gaps_Exception
      * @param   array   options
      */
@@ -215,5 +215,35 @@ class Gaps_DriverBoolTest extends Unittest_TestCase {
         
         $this->assertSame($this->_model->field, $value);
         $this->assertSame($driver->checked(), $expected);
+    }
+    
+    /**
+     * Provides test data for testing rendering.
+     *
+     * @return array
+     */
+    public function provider_render() {
+        return array(
+            array(
+                array(
+                    'options' => array(
+                        'checked' => 1,
+                        'unchecked' => 0,
+                    ),
+                ),
+            ),
+        );
+    }
+
+    /**
+     * Tests cosntructor.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   array   options
+     */
+    public function test_render($options) {
+        $driver = new Gaps_Driver_Bool('field', $options, $this->_model);
+        $driver->render();
     }
 }

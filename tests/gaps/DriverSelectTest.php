@@ -132,4 +132,34 @@ class Gaps_DriverSelectTest extends Unittest_TestCase {
             
         }
     }
+    
+    /**
+     * Provides test data for testing rendering.
+     *
+     * @return array
+     */
+    public function provider_render() {
+        return array(
+            array(
+                array(
+                    'options' => array(
+                        1 => 1,
+                        2 => 2,
+                    )
+                ),
+            ),
+        );
+    }
+
+    /**
+     * Tests cosntructor.
+     * 
+     * @test
+     * @dataProvider provider_render
+     * @param   array   options
+     */
+    public function test_render($options) {
+        $driver = new Gaps_Driver_Select('field', $options, $this->_model);
+        $driver->render();
+    }
 }

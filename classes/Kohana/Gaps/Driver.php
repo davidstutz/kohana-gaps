@@ -3,17 +3,12 @@
 /**
  * Driver.
  * 
- * @package		Gaps
- * @author		David Stutz
+ * @package     Gaps
+ * @author      David Stutz
  * @copyright	(c) 2013 David Stutz
- * @license		http://opensource.org/licenses/bsd-3-clause
+ * @license     http://opensource.org/licenses/bsd-3-clause
  */
 abstract class Kohana_Gaps_Driver {
-	
-	/**
-	 * @var	string	used view
-	 */
-	protected $_view;
 	
 	/**
 	 * @var	mixed	value
@@ -40,7 +35,26 @@ abstract class Kohana_Gaps_Driver {
 	 */
 	public function __construct($field, $options, $model) {
 		$this->_value = $model->{$field};
-		$this->_options = array_merge($options, array('field' => $field));
+		
+        // Set up default configuration.
+        $defaults = array('field' => $field);
+        
+        if (!isset($options['label'])) {
+            $defaults['label'] = $field;
+        }
+        
+        // Initialize attributes option so views can simply use HTML::attributes().
+        if (!isset($options['attributes'])) {
+            $defaults['attributes'] = array();
+        }
+        
+        // Initialize empty rules if needed.
+        if (isset($options['rules']) AND !is_array($options['rules'])) {
+            throw new Gaps_Exception('Gaps_Driver: Rules must be given as array.');
+        }
+        
+        // Merge defaults with given options.
+        $this->_options = array_merge($options, $defaults);
 	}
 	
 	/**
@@ -51,6 +65,16 @@ abstract class Kohana_Gaps_Driver {
 	 */
 	abstract public function load($model, $post);
 	
+    /**
+     * Check if an optionis set using isset();
+     * 
+     * @param   string  key
+     * @return  boolean is set
+     */
+    public function __isset($key) {
+        return isset($this->_options[$key]);
+    }
+    
 	/**
 	 * Getter for options.
 	 * 
@@ -58,9 +82,33 @@ abstract class Kohana_Gaps_Driver {
 	 * @return	mixed	option
 	 */
 	public function __get($key) {
-		return isset($this->_options[$key]) ? $this->_options[$key] : NULL;
+        
+        if (!isset($this->_options[$key])) {
+            throw new Gaps_Exception('Configuration option \'' . $key . '\' not found.');
+        }
+        
+		return $this->_options[$key];
 	}
 	
+    /**
+     * Getter for function given as option.
+     * 
+     * @param   string  key
+     * @param   mixed   arguments
+     * @return  mixed
+     */
+    public function __call($key, $arguments) {
+        if (!isset($this->_options[$key])) {
+            throw new Gaps_Exception('Configuration option \'' . $key . '\' not found.');
+        }
+        
+        if (!is_callable($this->_options[$key])) {
+            throw new Gaps_Exception('Tried to call uncallable configuration option.');
+        }
+        
+        return $this->_options[$key]($arguments);
+    }
+    
 	/**
 	 * Getter for value.
 	 * 
@@ -70,7 +118,6 @@ abstract class Kohana_Gaps_Driver {
 	    
         /**
          * The processing of filters is taken from the ORM filters.
-         * So ORM filters and usual field filters are behaving equally.
          */
 		if (isset($this->_options['filters']) AND is_array($this->_options['filters'])) {
 			foreach ($this->_options['filters'] as $array) {
@@ -133,7 +180,7 @@ abstract class Kohana_Gaps_Driver {
 		if ($theme === NULL) {
 			$theme = Kohana::$config->load('gaps.theme');
 		}
-		
-		return View::factory('gaps/' . $theme . '/driver/'.$this->_view, array('input' => $this))->render();
+        
+		return View::factory('gaps/' . $theme . '/driver/' . $this->_view, array('input' => $this))->render();
 	}
 }
