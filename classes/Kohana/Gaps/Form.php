@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 David Stutz
+ * @copyright	(c) 2013 - 2014 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Form {
@@ -121,6 +121,7 @@ class Kohana_Gaps_Form {
      * Loads array of input, usually POST.
      *
      * @param   array   post
+     * @param   array   files
      * @return  boolean passed validation
      */
     public function load($post, $files = NULL) {
@@ -176,6 +177,29 @@ class Kohana_Gaps_Form {
         return TRUE;
     }
 
+    /**
+     * Fill the form with the given post data.
+     * This will not triggeer validation.
+     * 
+     * @param   array   post
+     * @param   array   files
+     * @return  object
+     */
+    public function fill($post, $files = NULL) {
+        foreach ($this->_drivers as $group) {
+            foreach ($group as $driver) {                
+                if ($driver instanceof Gaps_Driver_File) {
+                    $driver->load($this->_model, $files);
+                }
+                else {
+                    $driver->load($this->_model, $post);
+                }
+            }
+        }
+        
+        return $this;
+    }
+    
     /**
      * Saves model.
      * If the model is not loaded the model is created. Then relationships are saved.

@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 David Stutz
+ * @copyright	(c) 2013 - 2014 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Has_Many extends Gaps_Driver {
@@ -75,6 +75,7 @@ class Kohana_Gaps_Driver_Has_Many extends Gaps_Driver {
      * @param	array 	post
      */
     public function load($model, $post) {
+        
         if (isset($post[$this->field])) {
             $this->_value = $post[$this->field];
         }

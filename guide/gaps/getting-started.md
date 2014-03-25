@@ -125,12 +125,12 @@ Second step: The controller action.
 Now you can display the whole form or specific parts of it within the template. For this purpose you can also use [direct access](direct-access) to all form elements.
 
     // Display the whole form using the given theme.
-    $form->render($theme);
+    echo $form->render($theme);
     
     // Render specific parts of the form:
-    $form->open();
-    $form->content(); // All form elements.
-    $form->close();
+    echo $form->open();
+    echo $form->content(); // All form elements.
+    echo $form->close();
 
 Beneath form generation Gaps will handle validation and in addition save the changes to the model (or create a new one in case it does not exist). Some further changes on the controller action:
 

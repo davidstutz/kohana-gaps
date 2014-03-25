@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 David Stutz
+ * @copyright	(c) 2013 - 2014 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Password_Confirm extends Gaps_Driver {
@@ -23,12 +23,10 @@ class Kohana_Gaps_Driver_Password_Confirm extends Gaps_Driver {
      */
     public function load($model, $post) {
         
-        if (!isset($post[$this->field])) {
-            throw new Gaps_Exception('Gaps_Driver_Password_Confirm: Key \'' . $this->field . '\' does not exist within the loaded data.');
+        if (isset($post[$this->field])) {
+            $this->_value = $post[$this->field];
+            $model->{$this->field} = $post[$this->field];
         }
-        
-        $this->_value = $post[$this->field];
-        $model->{$this->field} = $post[$this->field];
     }
 
 }
