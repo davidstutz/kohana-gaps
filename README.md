@@ -8,6 +8,22 @@ Gaps combines the following steps in one module:
 
 For documentation see the guide/ subfolder or use Kohana's userguide module.
 
+## Composer
+
+Installation via composer:
+
+    {
+        "repositories": [
+            {
+                "type": "vcs",
+                "url": "https://github.com/davidstutz/kohana-gaps"
+            }
+        ],
+        "require": {
+            "davidstutz/kohana-gaps": "dev-master"
+        }
+    }
+
 ## License
 
 Copyright (c) 2013, David Stutz
