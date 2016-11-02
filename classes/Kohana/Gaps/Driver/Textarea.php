@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 - 2014 David Stutz
+ * @copyright   (c) 2013 - 2016 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Textarea extends Gaps_Driver {
@@ -18,8 +18,8 @@ class Kohana_Gaps_Driver_Textarea extends Gaps_Driver {
     /**
      * Load to load value.
      *
-     * @param	object	model
-     * @param	array 	post
+     * @param    object    model
+     * @param    array     post
      */
     public function load($model, $post) {
         

@@ -9,31 +9,31 @@ The basic steps for using Gaps are the following:
 
 So consider the following model 'Contact', based on the given SQL scheme:
 
-	CREATE  TABLE `contacts` (
-	  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
-	  `gender` INT(11) UNSIGNED NULL ,
-	  `first_name` VARCHAR(255) NULL ,
-	  `last_name` VARCHAR(255) NULL ,
-	  `email` VARCHAR(255) NULL ,
-	  `phone` VARCHAR(45) NULL ,
-	  PRIMARY KEY (`id`));
+    CREATE  TABLE `contacts` (
+      `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+      `gender` INT(11) UNSIGNED NULL ,
+      `first_name` VARCHAR(255) NULL ,
+      `last_name` VARCHAR(255) NULL ,
+      `email` VARCHAR(255) NULL ,
+      `phone` VARCHAR(45) NULL ,
+      PRIMARY KEY (`id`));
 
 First step: Set up the model and the gaps configuration method.
 
-	class Model_Contact extends ORM {
-		
-		/**
-		 * @var	string	table
-		 */
-		protected $_table_name = 'contacts';
-		
-		/**
-		 * Gaps configuration.
-		 * 
-		 * @return	array 	gaps configuration
-		 */
-		public function gaps() {
-			return array(
+    class Model_Contact extends ORM {
+        
+        /**
+         * @var    string    table
+         */
+        protected $_table_name = 'contacts';
+
+        /**
+         * Gaps configuration.
+         * 
+         * @return    array     gaps configuration
+         */
+        public function gaps() {
+            return array(
                 array(
                     'gender' => array(
                         'label' => 'Gender',
@@ -71,11 +71,11 @@ First step: Set up the model and the gaps configuration method.
                         'label' => 'Phone',
                     ),
                 ),
-			);
-		}
-	}
+            );
+        }
+    }
 
-Gaps will use the given configuraiton to generate an appropriate form. Let us have a look at the configuration in detail. Each form element corresponds to an attribute of the model and is rendered using a specified driver. Consider the `last_name`:
+Gaps will use the given configuration to generate an appropriate form. Let us have a look at the configuration in detail. Each form element corresponds to an attribute of the model and is rendered using a specified driver. Consider the `last_name`:
 
     // attribute name => configuration array
     'last_name' => array(
@@ -113,12 +113,30 @@ There are drivers provided for all common form elements:
 
 Each driver requires a different set of configuration options. See [here](drivers) for detailed information on the drivers and [here](model-configuration) for a general overview of configuration options. In addition there are drivers provided to handle relationships like `has_many` or `belongs_to` as used by the ORM module.
 
+Also remember to add the validation messages in `messages/contact.php`. The message files
+follow the below format:
+
+    return array(
+        'gender' => array(
+            'not_empty' => __('Select a gender.'),
+            'default' => __('Gender invalid.'),
+        ),
+        'last_name' => array(
+            'not_empty' => __('Fill a last name.'),
+            'default' => __('Last name invalid.'),
+        ),
+        'email' => array(
+            'mail' => __('Not a valid e-mail address.'),
+            'default' => __('E-Mail invalid.'),
+        ),
+    );
+
 Second step: The controller action.
 
-	// Create a new contact model.
-	$contact = ORM::factory('contact');
-	// Gaps requires the contact model and the name of the configuration method.
-	$form = Gaps::form($contact, 'gaps');
+    // Create a new contact model.
+    $contact = ORM::factory('Contact');
+    // Gaps requires the contact model and the name of the configuration method.
+    $form = Gaps::form($contact, 'gaps');
     
     $this->template->content = $form;
 
@@ -134,22 +152,22 @@ Now you can display the whole form or specific parts of it within the template. 
 
 Beneath form generation Gaps will handle validation and in addition save the changes to the model (or create a new one in case it does not exist). Some further changes on the controller action:
 
-	// Create a new contact model.
-	$contact = ORM::factory('contact');
-	// The method expects the contact model and the name of the configuration file.
-	$form = Gaps::form($contact, 'gaps');
-	
-	// Check for POST request.
-	if (Request::POST === $this->request->method()) {
-		// If validation passes update/create the model.
-		// The load method expects the post array (the data to validate) and loads the values into the model.
-		if ($form->load($this->request->post())) {
-			$form->save();
-		}
-	}
-	
-	// If the form was submitted but did not pass the validation
-	// Gaps will automatically add error messages.
-	$this->template->content = $form;
+    // Create a new contact model.
+    $contact = ORM::factory('Contact');
+    // The method expects the contact model and the name of the configuration file.
+    $form = Gaps::form($contact, 'gaps');
+    
+    // Check for POST request.
+    if (Request::POST === $this->request->method()) {
+        // If validation passes update/create the model.
+        // The load method expects the post array (the data to validate) and loads the values into the model.
+        if ($form->load($this->request->post())) {
+            $form->save();
+        }
+    }
+    
+    // If the form was submitted but did not pass the validation
+    // Gaps will automatically add error messages.
+    $this->template->content = $form;
 
 This simple example shows the basic set up for working with Gaps. For more advanced examples see [further examples](further-examples.md).

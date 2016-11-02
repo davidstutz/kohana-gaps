@@ -2,16 +2,16 @@
 
 The configuration is provided by a method of the model:
 
-	/**
-	 * Gaps configuration.
-	 *
-	 * @return 	array	configuration
-	 */
-	public function gaps() {
-		return array(
-			// Configuration ...
-		);
-	}
+    /**
+     * Gaps configuration.
+     *
+     * @return     array    configuration
+     */
+    public function gaps() {
+        return array(
+            // Configuration ...
+        );
+    }
 
 The default name for this method should be `gaps`. But they can be named different depending on their purpose.
 

@@ -6,7 +6,9 @@ Gaps combines the following steps in one module:
 * Form validation.
 * Updating/creating the model.
 
-For documentation see the guide/ subfolder or use Kohana's userguide module.
+For documentation see the `guide/` subfolder or use Kohana's [Userguide](https://github.com/kohana/userguide) module.
+
+Note that a demonstration can be found at [davidstutz/kohana-demo](https://github.com/kohana/kohana-demo).
 
 ## Composer
 
@@ -26,7 +28,7 @@ Installation via composer:
 
 ## License
 
-Copyright (c) 2013, David Stutz
+Copyright (c) 2013 - 2016, David Stutz
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

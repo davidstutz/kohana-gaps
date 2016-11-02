@@ -5,42 +5,42 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 - 2014 David Stutz
+ * @copyright   (c) 2013 - 2016 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Form {
 
     /**
-     * @var	array 	drivers
+     * @var    array     drivers
      */
     protected $_drivers = array();
 
     /**
-     * @var	object	model
+     * @var    object    model
      */
     protected $_model;
 
     /**
-     * @var	array 	errors
+     * @var    array     errors
      */
     protected $_errors = array();
 
     /**
-     * @var	array 	attributes
+     * @var    array     attributes
      */
     protected $_attributes = array();
 
     /**
-     * @var	string	validation file
+     * @var    string    validation file
      */
     protected $_validation_file;
 
     /**
      * Constructor.
      *
-     * @throws	Gaps_Exception
-     * @param	object	model
-     * @param 	string	configuration method
+     * @throws    Gaps_Exception
+     * @param    object    model
+     * @param     string    configuration method
      */
     public function __construct($model, $method) {
         /**
@@ -235,7 +235,7 @@ class Kohana_Gaps_Form {
     /**
      * Fetch validation messages.
      *
-     * @return	array 	messages
+     * @return    array     messages
      */
     public function errors() {
         return $this->_errors;
@@ -244,8 +244,8 @@ class Kohana_Gaps_Form {
     /**
      * Set or get attribute.
      *
-     * @param	array	attributes
-     * @return 	mixed this/attributes
+     * @param    array    attributes
+     * @return     mixed this/attributes
      */
     public function attributes($attributes = NULL) {
         if ($attributes === NULL) {
@@ -260,8 +260,8 @@ class Kohana_Gaps_Form {
     /**
      * Get an attribute driver.
      *
-     * @param	string	attribute name
-     * @return	object	driver
+     * @param    string    attribute name
+     * @return    object    driver
      */
     public function __get($field) {
         foreach ($this->_drivers as $group) {
@@ -276,7 +276,7 @@ class Kohana_Gaps_Form {
     /**
      * toString.
      *
-     * @return	string	rendered
+     * @return    string    rendered
      */
     public function __toString() {
         return $this->render();
@@ -285,7 +285,7 @@ class Kohana_Gaps_Form {
     /**
      * Returns opening tag of form.
      *
-     * @return	string opening tag
+     * @return    string opening tag
      */
     public function open($theme = NULL) {
         return View::factory('gaps/' . $this->_theme($theme) . '/open', array('attributes' => $this->_attributes))->render();
@@ -294,7 +294,7 @@ class Kohana_Gaps_Form {
     /**
      * Returns content of form, including all inputs.
      *
-     * @return	string content
+     * @return    string content
      */
     public function content($theme = NULL) {
         return View::factory('gaps/' . $this->_theme($theme) . '/content', array(
@@ -307,7 +307,7 @@ class Kohana_Gaps_Form {
     /**
      * Returns submit button of form.
      *
-     * @return	string	submit button
+     * @return    string    submit button
      */
     public function submit($theme = NULL) {
         return View::factory('gaps/' . $this->_theme($theme) . '/submit')->render();
@@ -316,7 +316,7 @@ class Kohana_Gaps_Form {
     /**
      * Returns closening tag of form.
      *
-     * @return	string	closing tag
+     * @return    string    closing tag
      */
     public function close($theme = NULL) {
         return View::factory('gaps/' . $this->_theme($theme) . '/close')->render();
@@ -325,7 +325,7 @@ class Kohana_Gaps_Form {
     /**
      * Renders form.
      *
-     * @return	string	rendered form
+     * @return    string    rendered form
      */
     public function render($theme = NULL) {
         return View::factory('gaps/form', array(

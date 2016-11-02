@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 - 2014 David Stutz
+ * @copyright   (c) 2013 - 2016 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Select extends Gaps_Driver {
@@ -19,9 +19,9 @@ class Kohana_Gaps_Driver_Select extends Gaps_Driver {
      * Constructor.
      *
      * @throws  Gaps_Exception
-     * @param	string	field
-     * @param	mixed	value
-     * @param	array 	options
+     * @param    string    field
+     * @param    mixed    value
+     * @param    array     options
      */
     public function __construct($field, $options, $model) {
         parent::__construct($field, $options, $model);
@@ -34,8 +34,8 @@ class Kohana_Gaps_Driver_Select extends Gaps_Driver {
     /**
      * Load to load value.
      *
-     * @param	object	model
-     * @param	mixed	value
+     * @param    object    model
+     * @param    mixed    value
      */
     public function load($model, $post) {
         
@@ -48,7 +48,7 @@ class Kohana_Gaps_Driver_Select extends Gaps_Driver {
     /**
      * Getter for options.
      *
-     * @return	array 	options
+     * @return    array     options
      */
     public function options() {
         return $this->_options['options'];

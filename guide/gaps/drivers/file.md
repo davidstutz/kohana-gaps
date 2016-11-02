@@ -12,7 +12,7 @@ Configuration:
         array('Upload::size', array(':value', '1M')),
         array('Upload::type', array(':value', array('pdf', 'doc', 'docx'))),
     ),
-	
+    
 * `store`: The path to the folder where the file will be saved.
 * `create`: If `TRUE` Gaps will automatically create the folder if needed.
 * `call`: A callback which will be called on the uploaded file. `FALSE` for no callback.
@@ -21,11 +21,11 @@ Configuration:
 
 In addition the generated form must have enctype `multipart/form-data`, so set the attributes of the form manually:
 
-	Gaps::form(ORM::factory('file'))->attributes(array(
-		'action' => URL::base() . Route::get(...)->uri(),
-		'method' => 'POST',
-		'enctype' => 'multipart/form-data',
-	));
+    Gaps::form(ORM::factory('File'))->attributes(array(
+        'action' => URL::base() . Route::get(...)->uri(),
+        'method' => 'POST',
+        'enctype' => 'multipart/form-data',
+    ));
 
 For correct loading of the form data use:
 

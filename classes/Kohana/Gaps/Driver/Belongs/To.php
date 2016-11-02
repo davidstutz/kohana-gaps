@@ -5,18 +5,18 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 - 2014 David Stutz
+ * @copyright   (c) 2013 - 2016 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Belongs_To extends Gaps_Driver {
 
     /**
-     * @var	string	relationship model
+     * @var    string    relationship model
      */
     protected $_rel;
 
     /**
-     * @var	object	model
+     * @var    object    model
      */
     protected $_model;
 
@@ -28,10 +28,10 @@ class Kohana_Gaps_Driver_Belongs_To extends Gaps_Driver {
     /**
      * Constructor.
      *
-     * @throws	Gaps_Exception
-     * @param	string	field
-     * @param	mixed	value
-     * @param	array 	options
+     * @throws    Gaps_Exception
+     * @param    string    field
+     * @param    mixed    value
+     * @param    array     options
      */
     public function __construct($field, $options, $model) {
         parent::__construct($field, $options, $model);
@@ -68,8 +68,8 @@ class Kohana_Gaps_Driver_Belongs_To extends Gaps_Driver {
     /**
      * Load to load value.
      *
-     * @param	object	model
-     * @param	array 	post
+     * @param    object    model
+     * @param    array     post
      */
     public function load($model, $post) {
         

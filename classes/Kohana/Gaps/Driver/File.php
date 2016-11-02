@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 - 2014 David Stutz
+ * @copyright   (c) 2013 - 2016 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver {
@@ -16,20 +16,20 @@ class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver {
     protected $_view = 'file';
     
     /**
-     * @var	array 	files array
+     * @var    array     files array
      */
     protected $_files = array();
 
     /**
-     * @var	object	model
+     * @var    object    model
      */
     protected $_model;
 
     /**
      * Load to load value.
      *
-     * @param	object	model
-     * @param 	array 	post
+     * @param    object    model
+     * @param     array     post
      */
     public function load($model, $files) {
         $this->_files = $files;
@@ -39,7 +39,7 @@ class Kohana_Gaps_Driver_File extends Kohana_Gaps_Driver {
     /**
      * The main action: saving or processing the files is done in save_rels.
      *
-     * @throws	Gaps_Exception
+     * @throws    Gaps_Exception
      */
     public function save_rels() {
         /**

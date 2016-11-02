@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 - 2014 David Stutz
+ * @copyright   (c) 2013 - 2016 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class File extends Kohana_File {
@@ -13,7 +13,7 @@ class File extends Kohana_File {
     /**
      * Get the extension of a file.
      *
-     * @return	string	extension
+     * @return    string    extension
      */
     public static function ext($file) {
         $array = explode('.', $file);

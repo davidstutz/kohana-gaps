@@ -4,29 +4,29 @@
 
 As example consider the following SQL scheme:
 
-	CREATE  TABLE `files` (
-	  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
-	  `description` TEXT NOT NULL ,
-	  `src` TEXT NOT NULL ,
-	  `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
-	  PRIMARY KEY (`id`));
+    CREATE  TABLE `files` (
+      `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+      `description` TEXT NOT NULL ,
+      `src` TEXT NOT NULL ,
+      `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+      PRIMARY KEY (`id`));
 
 The table will store the path to the file and an optional description. Consider the corresponding model:
 
-	class Model_File extends ORM {
-		
-		/**
-		 * @var	string	table
-		 */
-		protected $_table_name = 'files';
-		
-		/**
-		 * Gaps configuration.
-		 * 
-		 * @return	array 	gaps configuration
-		 */
-		public function gaps() {
-			return array(
+    class Model_File extends ORM {
+        
+        /**
+         * @var    string    table
+         */
+        protected $_table_name = 'files';
+        
+        /**
+         * Gaps configuration.
+         * 
+         * @return    array     gaps configuration
+         */
+        public function gaps() {
+            return array(
                 array(
                     'src' => array(
                         'driver' => 'file',
@@ -48,9 +48,9 @@ The table will store the path to the file and an optional description. Consider 
                         'label' => 'Description',
                     ),
                 ),
-			);
-		}
-	}
+            );
+        }
+    }
 
 Let's have a look at the gaps configuration. The textarea driver should be known. The file driver expects the following configuration keys:
 
@@ -62,11 +62,11 @@ Rules are optional. The `Upload` helper can be used to validate size and type of
 
 In addition the generated form must have enctype `multipart/form-data`, so set the attributes of the form manually:
 
-	Gaps::form(ORM::factory('file'))->attributes(array(
-		'action' => URL::base() . Route::get(...)->uri(),
-		'method' => 'POST',
-		'enctype' => 'multipart/form-data',
-	));
+    Gaps::form(ORM::factory('File'))->attributes(array(
+        'action' => URL::base() . Route::get(...)->uri(),
+        'method' => 'POST',
+        'enctype' => 'multipart/form-data',
+    ));
 
 Within the controller load both `$_POST` and `$_FILES` for validation:
 

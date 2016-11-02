@@ -5,7 +5,7 @@
  *
  * @package     Gaps
  * @author      David Stutz
- * @copyright	(c) 2013 - 2014 David Stutz
+ * @copyright   (c) 2013 - 2016 David Stutz
  * @license     http://opensource.org/licenses/bsd-3-clause
  */
 class Kohana_Gaps_Driver_Bool extends Gaps_Driver {
@@ -18,10 +18,10 @@ class Kohana_Gaps_Driver_Bool extends Gaps_Driver {
     /**
      * Constructor.
      *
-     * @throws	Gaps_Exception
-     * @param	string	field
-     * @param	mixed	value
-     * @param	array 	options
+     * @throws    Gaps_Exception
+     * @param    string    field
+     * @param    mixed    value
+     * @param    array     options
      */
     public function __construct($field, $options, $model) {
         parent::__construct($field, $options, $model);
@@ -42,7 +42,7 @@ class Kohana_Gaps_Driver_Bool extends Gaps_Driver {
     /**
      * Checks whether bool is checked.
      *
-     * @return	boolean	checked
+     * @return    boolean    checked
      */
     public function checked() {
         return $this->_options['options']['unchecked'] != $this->_value;
@@ -51,8 +51,8 @@ class Kohana_Gaps_Driver_Bool extends Gaps_Driver {
     /**
      * Load to load value.
      *
-     * @param	object	model
-     * @param	array 	post
+     * @param    object    model
+     * @param    array     post
      */
     public function load($model, $post) {
         if (isset($post[$this->field])) {
