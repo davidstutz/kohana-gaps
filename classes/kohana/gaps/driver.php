@@ -178,7 +178,7 @@ abstract class Kohana_Gaps_Driver {
      */
     public function render($theme = NULL) {
         if ($theme === NULL) {
-            $theme = Kohana::$config->load('gaps.theme');
+            $theme = Kohana::config('gaps.theme');
         }
         
         return View::factory('gaps/' . $theme . '/driver/' . $this->_view, array('input' => $this))->render();

@@ -298,7 +298,7 @@ class Kohana_Gaps_Form {
      */
     public function content($theme = NULL) {
         return View::factory('gaps/' . $this->_theme($theme) . '/content', array(
-            'theme' => Kohana::$config->load('gaps.theme'),
+            'theme' => Kohana::config('gaps.theme'),
             'drivers' => $this->_drivers,
             'errors' => $this->_errors
         ))->render();
@@ -343,7 +343,7 @@ class Kohana_Gaps_Form {
      */
     protected function _theme($theme) {
         if ($theme === NULL) {
-            $theme = Kohana::$config->load('gaps.theme');
+            $theme = Kohana::config('gaps.theme');
         }
         
         if (!is_dir(MODPATH . 'gaps' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'gaps' . DIRECTORY_SEPARATOR . $theme)) {
