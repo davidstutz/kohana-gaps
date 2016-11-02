@@ -1,1 +1,0 @@
-<input type="file" value="<?php echo $input->value(); ?>" name="<?php echo $input->field; ?>" <?php echo HTML::attributes($input->attributes); ?> />
